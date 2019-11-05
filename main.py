@@ -10,12 +10,14 @@ from torchsummary import summary
 
 
 def psnr(image, noise):
+    # 计算PSNR
     diff = image - noise
     mse = np.mean(np.square(diff))
     mse = 10 * np.log10(255 * 255 / mse)    
     return mse
 
 def judge(path, test, result):
+    # 计算测试路径中测试图像与原图像的PSNR
     for rgb, out in zip(os.listdir(path), os.listdir(test)):
         image = cv.imread(path+'/'+rgb)
         img = cv.imread(test+'/'+out)
@@ -23,7 +25,7 @@ def judge(path, test, result):
         result.append(psnr(image, img))
         print(psnr(image, img))
 
-def test(srcnn):
+def test_more(srcnn):
     # 评判多次超分辨率效果
     psnr_list = []
     path = 'recover'
@@ -61,5 +63,5 @@ if __name__ == '__main__':
     
     # test_data = My_data('test')  # 读取测试数据集
     # test_data.test(srcnn)  # 测试数据
-    # test(srcnn)
+    # test_more(srcnn)
 

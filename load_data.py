@@ -77,7 +77,7 @@ class My_data(object):
             (0, 3, 1, 2)) / 255  # 数据转换成tensor格式并归一化
         labels = torch.from_numpy(np.array(self.labels, np.float32)).permute((0, 3, 1, 2)) / 255
         torch_dataset = Data.TensorDataset(self.inputs, labels)
-        self.loader = Data.DataLoader(
+        self.loader = Data.DataLoader( # 设置torch的数据读取器
             dataset=torch_dataset,
             batch_size=self.batch_size,
             shuffle=True
@@ -107,7 +107,7 @@ class My_data(object):
         for i, img in enumerate(self.predict):
             cv.imwrite('recover/' + str(i) + '.jpg', img)
 
-    def test(self, srcnn):
+    def test(self, srcnn):  # 在srcnn上测试数据
         self.labels = srcnn(
             self.inputs.cuda()).detach().cpu()
         self.labels = self.labels.numpy().transpose((0, 2, 3, 1))

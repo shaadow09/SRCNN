@@ -10,19 +10,21 @@ class SRCNN(torch.nn.Module):
 
     def __init__(self, FILE):
         super(SRCNN, self).__init__()
+        # 搭建网络结构 以及 网络存储路径
         self.file = FILE
         self.Pear = torch.nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(9, 9))
         self.Nlm = torch.nn.Conv2d(in_channels=64, out_channels=32, kernel_size=(1, 1))
         self.Rec = torch.nn.Conv2d(in_channels=32, out_channels=3, kernel_size=(5, 5))
 
     def forward(self, x):
+        # 前向传播
         x = F.relu(self.Pear(x))
         x = F.relu(self.Nlm(x))
         x = self.Rec(x)
         return x
 
     def train(self, iteration, loader):
-        loss_list = []
+        # 训练过程
         criter = torch.nn.MSELoss()
         optimizer = torch.optim.Adam(lr=1e-6, params=self.parameters())
         for _ in range(iteration):
@@ -36,8 +38,6 @@ class SRCNN(torch.nn.Module):
                 loss.backward()
                 optimizer.step()
             print('loss:', sum_loss / step)
-            loss_list.append(sum_loss / step)
-            if _ % 10 == 0:
+            if _ % 10 == 0:  # 每十个epoch 保存一次网络
                 torch.save(self, self.file)
-        np.save('loss.npy', loss_list)
 
